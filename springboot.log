@@ -1,0 +1,2 @@
+22:38:02.340 [http-nio-8080-exec-1] ERROR c.j.b.c.CollectionController --- Invalid collection ID format. 
+22:38:02.843 [http-nio-8080-exec-6] ERROR c.j.b.c.CollectionController --- Invalid collection ID format. 
