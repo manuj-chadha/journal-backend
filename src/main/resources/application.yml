@@ -36,5 +36,4 @@ spring:
         org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_USERNAME}' password='${KAFKA_PASSWORD}';
       session.timeout.ms: 45000
 
-api:
-  key: ${WEATHER_API_KEY}
+apiKey: ${WEATHER_API_KEY}
