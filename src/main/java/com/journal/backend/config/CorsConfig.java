@@ -14,7 +14,7 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowCredentials(true);
-        cors.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://reflect-journal-web.vercel.app/")); // ✅ THIS
+        cors.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://reflect-journal-web.vercel.app"));
         cors.setAllowedHeaders(List.of("*"));
         cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
