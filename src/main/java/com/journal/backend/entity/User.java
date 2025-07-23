@@ -25,6 +25,7 @@ public class User {
     private String password;
     private String email;
     private boolean sentiment;
+    private String recaptchaToken;
     @DBRef
     private List<Collection> collections=new ArrayList<>();
     @DBRef

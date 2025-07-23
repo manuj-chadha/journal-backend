@@ -6,6 +6,7 @@ import com.journal.backend.dto.UserDTO;
 import com.journal.backend.dto.UserResponseDTO;
 import com.journal.backend.entity.User;
 import com.journal.backend.services.CustomUserDetailsServiceImpl;
+import com.journal.backend.services.RecaptchaService;
 import com.journal.backend.services.UserService;
 import com.journal.backend.utils.JwtService;
 import jakarta.validation.Valid;
@@ -29,6 +30,10 @@ public class PublicController {
     private UserService userService;
 
     @Autowired
+    private RecaptchaService recaptchaService;
+
+
+    @Autowired
     private CustomUserDetailsServiceImpl userDetailsService;
 
     @Autowired
@@ -36,13 +41,27 @@ public class PublicController {
 
     @GetMapping("/health-check")
     public ResponseEntity<?> healthCheck(){
-        return ResponseEntity.ok("Backend is healthy.");
+        try{
+            return ResponseEntity.ok("Backend is healthy.");
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<AuthResponse>> createUser(@Valid @RequestBody UserDTO userDTO) {
         try {
+            if (!recaptchaService.verify(userDTO.getRecaptchaToken())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        ApiResponse.<AuthResponse>builder()
+                                .success(false)
+                                .message("Invalid reCAPTCHA token")
+                                .data(null)
+                                .build()
+                );
+            }
             userService.createNewUser(userDTO);
-            User createdUser = userService.findByUsername(userDTO.getUsername()); // You must implement this
+            User createdUser = userService.findByUsername(userDTO.getUsername());
             String jwt = jwtService.generateToken(createdUser.getUsername());
 
             UserResponseDTO userResponse = UserResponseDTO.builder()
@@ -74,6 +93,15 @@ public class PublicController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> loginUser(@RequestBody User user) {
         try {
+            if (!recaptchaService.verify(user.getRecaptchaToken())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        ApiResponse.<AuthResponse>builder()
+                                .success(false)
+                                .message("Invalid reCAPTCHA token")
+                                .data(null)
+                                .build()
+                );
+            }
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );

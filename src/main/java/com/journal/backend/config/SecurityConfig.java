@@ -2,7 +2,9 @@ package com.journal.backend.config;
 
 import com.journal.backend.filter.JwtFilter;
 import com.journal.backend.services.CustomUserDetailsServiceImpl;
+import org.apache.catalina.filters.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,14 @@ public class SecurityConfig {
 
     @Autowired
     private CustomUserDetailsServiceImpl userDetailsService;
+    @Bean
+    public FilterRegistrationBean<RateLimitFilter> rateLimitFilter() {
+        FilterRegistrationBean<RateLimitFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RateLimitFilter());
+        registrationBean.addUrlPatterns("/*");
+        return registrationBean;
+    }
+
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {

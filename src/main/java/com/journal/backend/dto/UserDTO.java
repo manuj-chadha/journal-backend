@@ -16,4 +16,5 @@ public class UserDTO {
 
     @NotBlank(message = "Password is mandatory")
     private String password;
+    private String recaptchaToken;
 }

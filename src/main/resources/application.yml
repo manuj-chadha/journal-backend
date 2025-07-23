@@ -37,3 +37,7 @@ spring:
       session.timeout.ms: 45000
 
 apiKey: ${WEATHER_API_KEY}
+
+google:
+  recaptcha:
+    secret: ${GOOGLE_RECAPTCHA}
