@@ -45,6 +45,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().equals("/public/health-check");
+        String path = request.getRequestURI().replaceAll("/+$", ""); 
+        return path.equals("/public/health-check");
     }
+
 }
